@@ -1,0 +1,80 @@
+/* The study page (T-112): the app's look, by its tokens only (src/shell/tokens.css); no colour literal here. */
+html, body { margin: 0; height: 100%; }
+body.st {
+  background: var(--c-app);
+  color: var(--c-text);
+  font-family: var(--font-ui);
+  font-size: var(--fs-lg);
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+#st-app { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+/* buttons: large targets, one or two words */
+.st-btn {
+  min-height: 56px; min-width: 128px; padding: 0 var(--s-5);
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  border-radius: var(--r-md); border: 1px solid var(--c-border);
+  background: var(--c-panel-raised); color: var(--c-text);
+  font: inherit; font-size: 19px; font-weight: var(--fw-strong);
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.st-btn.is-primary { background: var(--c-accent-strong); border-color: var(--c-accent-strong); color: var(--c-active-text); }
+.st-btn:disabled { opacity: 0.38; cursor: default; }
+.st-btn:focus-visible { outline: 3px solid var(--c-active-ring); outline-offset: 2px; }
+
+/* a page of text: the agreement, the end, a message */
+.st-doc { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.st-doc-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: var(--s-5) var(--s-4); }
+.st-doc-text { max-width: 720px; margin: 0 auto; line-height: 1.5; }
+.st-doc-text h2 { font-size: 26px; margin: 0 0 var(--s-3); }
+.st-doc-text h3 { font-size: 19px; margin: var(--s-5) 0 var(--s-2); color: var(--c-accent); }
+.st-doc-text p, .st-doc-text li { color: var(--c-text); }
+.st-doc-text ul { padding-left: 1.3em; margin: var(--s-2) 0; }
+.st-doc-text strong { color: var(--c-text); }
+.st-doc-foot {
+  display: flex; justify-content: center; gap: var(--s-4); flex-wrap: wrap;
+  padding: var(--s-4); background: var(--c-panel); border-top: 1px solid var(--c-divider);
+  padding-bottom: max(var(--s-4), env(safe-area-inset-bottom));
+}
+.st-note { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--s-5); }
+.st-card { max-width: 560px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--s-4); }
+.st-card h2 { font-size: 28px; margin: 0; }
+.st-card p { margin: 0; color: var(--c-text-muted); line-height: 1.45; font-size: 19px; }
+.st-note .st-card { box-sizing: border-box; width: 100%; padding: calc(2 * var(--s-5)) var(--s-5); background: var(--c-panel); border: 1px solid var(--c-border); border-radius: var(--r-lg); box-shadow: var(--shadow-panel); }
+
+/* writing: the bar, the item panel and the page */
+.st-write { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.st-bar {
+  flex: none; display: flex; align-items: center; gap: var(--s-3);
+  min-height: 72px; padding: var(--s-2) var(--s-4); box-sizing: border-box;
+  background: var(--c-panel); border-bottom: 1px solid var(--c-divider);
+  padding-top: max(var(--s-2), env(safe-area-inset-top));
+}
+.st-count { font-size: 20px; font-weight: var(--fw-strong); white-space: nowrap; min-width: 96px; }
+.st-msg { flex: 1; min-width: 0; text-align: center; color: var(--c-warn); font-weight: var(--fw-strong); font-size: 18px; line-height: 1.25; }
+.st-msg.is-quiet { color: var(--c-text-muted); font-weight: normal; }
+.st-cover { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: var(--s-5); background: var(--c-scrim); }
+.st-cover .st-card { background: var(--c-panel); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: var(--s-5); box-shadow: var(--shadow-panel); }
+.st-cover h2 { color: var(--c-warn); font-size: 24px; line-height: 1.3; }
+a.st-btn { text-decoration: none; }
+
+/* the item to copy sits ABOVE the writing area, across the full width, in both orientations (the owner: "better for it to be on top due to space");
+   its band is as tall as the item needs; the writing area takes the rest */
+.st-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.st-item {
+  flex: none; box-sizing: border-box; width: 100%; overflow: hidden;
+  padding: var(--s-4) 20px; background: var(--c-paper-gray); color: var(--c-on-paper);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--s-2); text-align: center;
+  border-bottom: 1px solid var(--c-paper-gray-line);
+}
+.st-item .st-hint { margin: var(--s-2) 0 0; font-size: 16px; color: var(--c-on-paper-muted); }
+.st-stage { flex: 1; position: relative; min-width: 0; min-height: 0; background: var(--c-paper); }
+.st-canvas { position: absolute; inset: 0; display: block; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+/* the item itself: a formula on one line, 28 px (22 px at the least, study/show.js); a sentence at 28 px */
+.st-math { display: inline-block; align-self: center; width: max-content; font-size: 28px; color: var(--c-on-paper); white-space: nowrap; }
+.st-math .katex-display { margin: 0; text-align: left; }
+.st-math .katex-display > .katex { text-align: left; }
+.st-math .katex { font-size: 1.08em; }
+.st-sentence { margin: 0; font-size: 28px; line-height: 1.45; color: var(--c-on-paper); overflow-wrap: anywhere; }

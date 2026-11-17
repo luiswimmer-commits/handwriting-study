@@ -1,0 +1,11 @@
+{
+  "endpoint": "https://yfcmifgyeymzdpdnooqq.supabase.co/rest/v1/study_ink",
+  "publishableKey": "sb_publishable_cpdw_vi1dfCt8Q2nRN7HGA_S3gFgGoY",
+  "completionCode": "CQMCM2ON",
+  "incompatibleCode": "CAVM82W7",
+  "noConsentCode": "CBM4ST88",
+  "items": {
+    "math": 35,
+    "text": 30
+  }
+}

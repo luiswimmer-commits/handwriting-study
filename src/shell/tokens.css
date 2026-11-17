@@ -1,0 +1,172 @@
+/*
+ * The one place colours, spacing and type are defined (SPEC R6, §5.5).
+ * No other file contains a colour literal: use these variables.
+ * Values follow the Fall 2026 look: dark slate chrome, blue for active and selected.
+ */
+:root {
+  /* The app's chrome is already dark. Declaring it stops browsers with a forced dark mode
+     (Samsung Internet) from darkening the page themselves, which turned white paper dark. */
+  color-scheme: dark;
+
+  /* Surfaces */
+  --c-app: #070d19;          /* behind everything */
+  --c-panel: #0f172a;        /* toolbars, docks, drawers */
+  --c-panel-raised: #162038; /* keys, cards, inputs on a panel */
+  --c-panel-hover: #1e293b;
+  --c-border: #2c3e60;
+  --c-divider: #334155;
+
+  /* Text on chrome */
+  --c-text: #f1f5f9;
+  --c-text-muted: #94a3b8;
+  --c-text-faint: #64748b;
+
+  /* Active and selected: blue, everywhere */
+  --c-accent: #38bdf8;
+  --c-accent-strong: #2563eb;
+  --c-active-bg: #1e3a8a;
+  --c-active-bg-soft: rgba(37, 99, 235, 0.32);
+  --c-active-text: #e0f2fe;
+  --c-active-ring: rgba(56, 189, 248, 0.48);
+  --shadow-active: 0 0 12px rgba(56, 189, 248, 0.45);
+
+  /* Status */
+  --c-scrim: rgba(7, 13, 25, 0.68);   /* behind a dialog */
+  --c-ok: #34d399;
+  --c-warn: #fbbf24;
+  --c-danger: #f87171;
+
+  /* The page itself (paper is light; ink defaults to black) */
+  --c-paper: #ffffff;
+  --c-paper-line: #dbe3ee;
+  --c-ink: #000000;
+  --c-on-paper: #0f172a;
+  --c-on-paper-muted: #64748b;
+  --c-backdrop: #1a2233;     /* area around the page */
+
+  /* Ink and text colours offered to the user: chosen to read well on white paper */
+  --c-ink-black: #000000;
+  --c-ink-blue: #1d4ed8;
+  --c-ink-red: #dc2626;
+  --c-ink-green: #15803d;
+  --c-ink-orange: #d97706;
+  --c-ink-purple: #7c3aed;
+  --c-ink-yellow: #facc15;
+  --c-ink-lime: #84cc16;
+  --c-ink-pink: #f472b6;
+  --c-ink-cyan: #22d3ee;
+
+  /* Text editing on the page */
+  --c-cursor: #2563eb;
+  --c-text-selection: #cfe3ff;
+
+  /* Selection and handles drawn on the page */
+  --c-select: #2563eb;
+  --c-select-fill: rgba(37, 99, 235, 0.10);
+  --c-handle: #ffffff;
+  --c-loose: #3b82f6;        /* a loose connector line */
+  --c-cut: #f59e0b;          /* cut points */
+  --c-bound: #a78bfa;        /* bounds */
+
+  /* Shape */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* Spacing */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+
+  /* Touch */
+  --hit: 44px;               /* default target size */
+  --hit-min: 36px;           /* never smaller */
+
+  /* Type */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-sm: 12px;
+  --fs-md: 14px;
+  --fs-lg: 17px;
+  --fw-strong: 700;
+
+  /* Elevation and motion */
+  --shadow-panel: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --t-fast: 120ms ease;
+}
+
+/* ---- Tool dock (T-008) ---- */
+:root {
+  --rail-w: 64px;            /* dock rail, tablet */
+  --rail-w-pc: 52px;         /* dock rail, PC */
+  --col-w: 208px;            /* dock option column, PC */
+  --accent-bar: 3px;         /* active marker at the rail's left edge */
+  --icon: 24px;
+  --icon-stroke: 1.8;
+  --hit-pc: 40px;            /* rail target on PC */
+  --row-h: 36px;             /* a labelled row in the PC column */
+  --swatch: 24px;            /* colour disc on tablet */
+  --c-swatch-edge: #475569;  /* edge that keeps a black swatch visible on the dark rail */
+  --z-dock: 55;           /* above the keyboards (z 50), below the page view sheet (80) */
+  --z-flyout: 60;
+  --z-tip: 70;
+  --panel-w: 420px;          /* the drawer and the Pages side panel */
+}
+
+/* The colour popup's ready-made swatches: 24 inks that read well on white paper (src/shell/dock/palette.js lists them) */
+:root {
+  --c-ink-pal-1: #000000;
+  --c-ink-pal-2: #374151;
+  --c-ink-pal-3: #6b7280;
+  --c-ink-pal-4: #a3a3a3;
+  --c-ink-pal-5: #78350f;
+  --c-ink-pal-6: #92400e;
+  --c-ink-pal-7: #991b1b;
+  --c-ink-pal-8: #dc2626;
+  --c-ink-pal-9: #ea580c;
+  --c-ink-pal-10: #d97706;
+  --c-ink-pal-11: #ca8a04;
+  --c-ink-pal-12: #eab308;
+  --c-ink-pal-13: #3f6212;
+  --c-ink-pal-14: #15803d;
+  --c-ink-pal-15: #16a34a;
+  --c-ink-pal-16: #0d9488;
+  --c-ink-pal-17: #0891b2;
+  --c-ink-pal-18: #0284c7;
+  --c-ink-pal-19: #1d4ed8;
+  --c-ink-pal-20: #4338ca;
+  --c-ink-pal-21: #7c3aed;
+  --c-ink-pal-22: #a21caf;
+  --c-ink-pal-23: #db2777;
+  --c-ink-pal-24: #be123c;
+}
+
+/* Papers a page can have (the Pages panel's Paper view; src/shell/pagespanel/appearance.js lists them). White is --c-paper above.
+   Each has its line colour (-line: the paper moved a little toward blue-grey on a light paper, toward white on a dark one, so a ruling is
+   seen but quiet). A dark paper also has its ink (-ink): black ink and default text are shown in it there; what is stored does not change. */
+:root {
+  --c-paper-cream: #fbf3dc;       --c-paper-cream-line: #d8dad5;
+  --c-paper-yellow: #fff7c2;      --c-paper-yellow-line: #dbddc2;
+  --c-paper-peach: #fde8d7;       --c-paper-peach-line: #dad2d1;
+  --c-paper-pink: #fce4ec;        --c-paper-pink-line: #d9cfe1;
+  --c-paper-lavender: #ece8fb;    --c-paper-lavender-line: #cdd2ec;
+  --c-paper-blue: #e6effb;        --c-paper-blue-line: #c9d7ec;
+  --c-paper-green: #e6f4ea;       --c-paper-green-line: #c9dbe0;
+  --c-paper-gray: #e9ecf1;        --c-paper-gray-line: #cbd5e5;
+  --c-paper-kraft: #e8d9bd;       --c-paper-kraft-line: #cac7be;
+  --c-paper-charcoal: #24272e;    --c-paper-charcoal-line: #505258;    --c-paper-charcoal-ink: #e9e9ea;
+  --c-paper-black: #101114;       --c-paper-black-line: #404143;       --c-paper-black-ink: #e7e7e8;
+  --c-paper-navy: #17233b;        --c-paper-navy-line: #454f62;        --c-paper-navy-ink: #e8e9eb;
+  --c-paper-chalkboard: #1f3a2d;  --c-paper-chalkboard-line: #4c6157;  --c-paper-chalkboard-ink: #e9ebea;
+}
+
+/* Page markers (labels on a page; the page view and the Pages panel colour them) */
+:root {
+  --c-marker-formula: #60a5fa;
+  --c-marker-question: #fbbf24;
+  --c-marker-explanation: #34d399;
+  --c-marker-solution: #a78bfa;
+  --c-marker-ideation: #f472b6;
+}
