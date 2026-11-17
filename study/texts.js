@@ -1,7 +1,7 @@
-// The study page's words (T-112): English for the groups math and en, Portuguese (read in Brazil and in Portugal) for pt. Few, plain and short: the
+// The study page's words (T-112): English for the groups math, en, ko, ja and zh, Portuguese (read in Brazil and in Portugal) for pt. Few, plain and short: the
 // writers are strangers, some reading their second language. The agreement itself is docs/release/study-agreement.<lang>.md (shown as it is).
-export const AGREEMENT_VERSION = '0.1';   // the version line of docs/release/study-agreement.en.md and .pt.md (tests/study/study.test.js checks it)
-export const STUDY_VERSION = 'study-0.1'; // sent as the payload's `app`: which page made the row
+export const AGREEMENT_VERSION = '0.2';   // the version line of docs/release/study-agreement.en.md and .pt.md (tests/study/study.test.js checks it)
+export const STUDY_VERSION = 'study-0.2'; // sent as the payload's `app`: which page made the row, and so which generation of the sets it showed (0.2: C99/C100)
 
 const EN = {
   title: 'Handwriting study',
@@ -32,6 +32,13 @@ const EN = {
   done: 'All your writing is stored.',
   notSetUp: 'This page is not set up yet.',
   badLink: 'Please open this page from Prolific.',
+  // the symbol groups (ko, ja, zh): the page speaks English there
+  symbolsDone: (n) => `${n} done`,
+  symbolPractice: 'Practice',
+  symbolHow: 'Write it twice, as you normally write it. Each one is taken when you lift the pen.',
+  previous: 'Previous symbol',
+  current: 'Back to the current symbol',
+  remove: 'Remove this one',
 };
 
 const PT = {
@@ -63,6 +70,13 @@ const PT = {
   done: 'Toda a sua escrita foi guardada.',
   notSetUp: 'Esta página ainda não está configurada.',
   badLink: 'Abra esta página pelo Prolific.',
+  // the symbol groups speak English; these are here so both languages have every text
+  symbolsDone: (n) => `${n} feitos`,
+  symbolPractice: 'Treino',
+  symbolHow: 'Escreva duas vezes, como você costuma escrever. Cada uma é tomada quando você levanta a caneta.',
+  previous: 'Símbolo anterior',
+  current: 'Voltar ao símbolo atual',
+  remove: 'Remover este',
 };
 
 export const TEXTS = Object.freeze({ en: Object.freeze(EN), pt: Object.freeze(PT) });

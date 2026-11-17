@@ -5,7 +5,10 @@
   "incompatibleCode": "CAVM82W7",
   "noConsentCode": "CBM4ST88",
   "items": {
-    "math": 35,
-    "text": 30
-  }
+    "math": 24,
+    "text": 20
+  },
+  "symbolMinutes": 10,
+  "symbolPause": 1000,
+  "symbolMove": 900
 }

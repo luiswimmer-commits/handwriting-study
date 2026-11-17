@@ -24,8 +24,9 @@ const r2 = (n) => Math.round(n * 100) / 100;
 const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 export class Pad {
-  constructor({ host, onChange = () => {}, onRefused = () => {} }) {
-    Object.assign(this, { host, onChange, onRefused });
+  constructor({ host, onChange = () => {}, onRefused = () => {}, onPenDown = () => {}, onPenUp = () => {} }) {
+    // onPenDown / onPenUp: a pen run starts / ends (the symbol groups take a drawing after a pause of the pen, study/symbols.js); a finger calls neither
+    Object.assign(this, { host, onChange, onRefused, onPenDown, onPenUp });
     host.classList.add('st-stage');
     host.innerHTML = '<canvas class="st-canvas"></canvas>';
     this.canvas = host.firstElementChild;
@@ -145,6 +146,7 @@ export class Pad {
     this._setTransform();
     this._wet = new WetStroke(this.ctx, this.style);
     this._wet.add([x, y]);
+    this.onPenDown();
   }
 
   _move(e) {
@@ -179,5 +181,6 @@ export class Pad {
     this.strokes.push({ id: `r${this.strokes.length + 1}`, segments: [run.pts], type: e.pointerType, at: run.at });
     this._draw();
     this.onChange();
+    this.onPenUp();
   }
 }

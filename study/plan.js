@@ -2,21 +2,30 @@
 // device check. Node imports it for the tests (tests/study/study.test.js).
 import { contributionPayload, newContributionId } from '../src/contribute/payload.js';
 import { STUDY_VERSION } from './texts.js';
+import { SYMBOLS } from './symbols.js';
 
-/** The three groups: the formulas (English page) and the two languages of sentences. */
+/** The groups: the formulas (English page), the two languages of sentences, and the three of single symbols (the owner, 2026-11-16: "can we drop 3
+ *  labelers from math and make them write korean japanese and chinese?"): Korean, Japanese and Simplified Chinese, whose page speaks English (the
+ *  studies ask for fluent English) while the symbol shown carries its own language (`itemLang`, so the device draws that language's forms). */
 export const GROUPS = Object.freeze({
   math: Object.freeze({ kind: 'math', lang: 'en', sets: 'sets.math.json' }),
   en: Object.freeze({ kind: 'text', lang: 'en', sets: 'sets.en.json' }),
   pt: Object.freeze({ kind: 'text', lang: 'pt', sets: 'sets.pt.json' }),
+  ko: Object.freeze({ kind: 'text', lang: 'ko', sets: 'sets.ko.json', symbols: true, itemLang: 'ko' }),
+  ja: Object.freeze({ kind: 'text', lang: 'ja', sets: 'sets.ja.json', symbols: true, itemLang: 'ja' }),
+  zh: Object.freeze({ kind: 'text', lang: 'zh', sets: 'sets.zh.json', symbols: true, itemLang: 'zh-Hans' }),
 });
 
 /** How many items a writer copies (the owner, 2026-11-16: "make sure there is next button instead of timer": a number, never a clock). The configuration's
  *  `items` may change them to match the study's stated length on Prolific. */
-export const ITEMS = Object.freeze({ math: 35, text: 30 });
+export const ITEMS = Object.freeze({ math: 24, text: 20 });
 export const PRACTICE = Object.freeze({
   math: Object.freeze(['y=2x+1', '\\frac{3}{4}']),
   en: Object.freeze(['The sun is warm today.', 'I like green apples.']),
   pt: Object.freeze(['O sol está quente hoje.', 'Eu gosto de maçãs verdes.']),
+  ko: Object.freeze(['ㅇ', '이']),
+  ja: Object.freeze(['の', '日']),
+  zh: Object.freeze(['口', '中']),
 });
 // the faint ruling of a sentence's writing area: line spacing in page units (CSS px when the item starts), about 14 mm on a tablet's screen (an iPad shows
 // about 132 CSS px to the inch: 72 px is 13.9 mm; the browser cannot know the screen's real size). Stored with each row as `ruling`; formulas have none.
@@ -29,20 +38,25 @@ const ID = /^[A-Za-z0-9_-]{1,64}$/;
 const CODE = /^[A-Za-z0-9_-]{1,32}$/;
 const SAFE_URL = /^https:\/\/[^\s]+$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/[^\s]*$/;
 
-/** The link Prolific opens: ?group=math|pt|en&PROLIFIC_PID=..&STUDY_ID=..&SESSION_ID=.. -> { group, pid, studyId, sessionId } or null. */
+/** The link Prolific opens: ?group=math|pt|en|ko|ja|zh&PROLIFIC_PID=..&STUDY_ID=..&SESSION_ID=.. -> { group, pid, studyId, sessionId } or null. A symbol
+ *  group's link may name the set the writer starts at, `&set=N` counted from 1 (no `set`: the first); the result then has `set`, counted from 0 (the page
+ *  refuses a set its list does not have). Sentences and math take no `set`: their set comes from the hash of the writer's ID. */
 export function readLink(search) {
   const q = new URLSearchParams(search);
   const group = q.get('group'), pid = q.get('PROLIFIC_PID'), studyId = q.get('STUDY_ID'), sessionId = q.get('SESSION_ID');
   if (!Object.hasOwn(GROUPS, group ?? '') || ![pid, studyId, sessionId].every((v) => ID.test(v ?? ''))) return null;
-  return Object.freeze({ group, pid, studyId, sessionId });
+  if (!GROUPS[group].symbols) return Object.freeze({ group, pid, studyId, sessionId });
+  const set = q.get('set') ?? '1';
+  if (!/^[1-9][0-9]{0,1}$/.test(set)) return null;
+  return Object.freeze({ group, pid, studyId, sessionId, set: Number(set) - 1 });
 }
 
-/** The page's language for a group (Portuguese for pt; English otherwise), also from a group that is not known yet. */
+/** The page's language for a group (Portuguese for pt; English otherwise, the symbol groups included), also from a group that is not known yet. */
 export const langOfGroup = (group) => (group === 'pt' ? 'pt' : 'en');
 
 /**
  * The configuration file beside the page (config.json, never in the repository; study/README.md):
- *   { endpoint, publishableKey, completionCode, incompatibleCode, noConsentCode, items?: { math, text }, prolificUrl? }
+ *   { endpoint, publishableKey, completionCode, incompatibleCode, noConsentCode, items?: { math, text }, symbolMinutes?, symbolPause?, symbolMove?, prolificUrl? }
  * -> { ok: true, config } | { ok: false, missing: [keys] }. No value is ever guessed; prolificUrl defaults to Prolific's own completion address.
  */
 export function readConfig(raw) {
@@ -61,8 +75,11 @@ export function readConfig(raw) {
   if (!SAFE_URL.test(prolificUrl)) missing.push('prolificUrl');
   const count = (v, d) => (Number.isInteger(v) && v >= 1 && v <= 200 ? v : d);
   const items = Object.freeze({ math: count(c.items?.math, ITEMS.math), text: count(c.items?.text, ITEMS.text) });
+  const within = (v, lo, hi, d) => (Number.isFinite(v) && v >= lo && v <= hi ? v : d);
+  // the symbol groups: the paid time, the pen's pause that takes a drawing, the wait before the next symbol (study/symbols.js SYMBOLS)
+  const symbols = Object.freeze({ minutes: within(c.symbolMinutes, 0.05, 60, SYMBOLS.minutes), takeMs: within(c.symbolPause, 200, 5000, SYMBOLS.takeMs), moveMs: within(c.symbolMove, 0, 5000, SYMBOLS.moveMs) });
   if (missing.length) return { ok: false, missing };
-  return { ok: true, config: Object.freeze({ endpoint, publishableKey, completionCode, incompatibleCode, noConsentCode, prolificUrl, items }) };
+  return { ok: true, config: Object.freeze({ endpoint, publishableKey, completionCode, incompatibleCode, noConsentCode, prolificUrl, items, symbols }) };
 }
 
 /** Where a button sends him back to Prolific: with a completion code, or (no code: he did not agree) Prolific's own site. */

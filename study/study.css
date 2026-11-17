@@ -84,3 +84,39 @@ a.st-btn { text-decoration: none; }
 .st-math .katex-display > .katex { text-align: left; }
 .st-math .katex { font-size: 1.08em; }
 .st-sentence { margin: 0; font-size: 28px; line-height: 1.45; color: var(--c-on-paper); overflow-wrap: anywhere; }
+
+/* the symbol groups (ko, ja, zh): the app's pack trainer on this page (src/packs/trainer/trainer.css): the symbol on a paper card, the area to draw
+   it in, and under the area the strip of the symbol's two places (a drawing a small picture with an x; the place being filled outlined in the accent).
+   On its side the card stands beside the area, as in the trainer; upright it sits on top, as the rest of the page has it. */
+.st-symbody { flex: 1; min-height: 0; display: grid; gap: var(--s-3) var(--s-4); padding: var(--s-3) var(--s-4) 0; background: var(--c-backdrop);
+  grid-template-columns: 240px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: "item stage" "item places"; }
+.st-symitem { grid-area: item; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-3); min-height: 0; text-align: center; }
+.st-symcard { display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; max-height: 200px; border-radius: var(--r-lg); background: var(--c-paper); color: var(--c-on-paper); }
+.st-symbol { font-size: 60px; line-height: 1; font-weight: 400; }
+.st-symitem .st-hint { margin: 0; font-size: 16px; line-height: 1.4; color: var(--c-text-muted); }
+.st-symstage { grid-area: stage; position: relative; min-height: 0; border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
+.st-symstage > [data-st=stage] { position: absolute; inset: 0; }
+.st-pause { position: absolute; left: 0; top: 0; z-index: 2; height: 3px; width: 0; background: var(--c-accent); opacity: 0.55; pointer-events: none; }
+.st-places { grid-area: places; display: flex; justify-content: center; gap: var(--s-3); margin: 0; padding: var(--s-1) 0 var(--s-3); list-style: none;
+  padding-bottom: max(var(--s-3), env(safe-area-inset-bottom)); }
+.st-place { position: relative; flex: none; width: 76px; height: 76px; box-sizing: border-box; display: grid; place-items: center; border: 2px dashed var(--c-border); border-radius: var(--r-md); }
+.st-place.is-next { border-color: var(--c-accent); }
+.st-place.is-filled { border: 2px solid var(--c-paper-line); background: var(--c-paper); }
+.st-ink { width: 100%; height: 100%; fill: none; stroke: var(--c-on-paper); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* x: a small visible circle, its hit area the 36 px minimum (the trainer's .pt-del) */
+.st-x { position: absolute; top: -12px; right: -12px; width: var(--hit-min); height: var(--hit-min); display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: var(--c-text); cursor: pointer; }
+.st-x::before { content: ""; position: absolute; inset: 7px; border-radius: var(--r-pill); background: var(--c-panel-raised); border: 1px solid var(--c-border); }
+.st-x svg { position: relative; }
+.st-x:active::before { background: var(--c-danger); border-color: var(--c-danger); }
+.st-chev { min-width: 56px; padding: 0 var(--s-3); }
+.st-chev[hidden] { display: none; }
+/* the previous symbol in view (the chevron): its card outlined, so it is plain this is not the next one */
+.st-sym.is-back .st-symcard { box-shadow: 0 0 0 3px var(--c-accent); }
+.st-write[data-paper=dark] .st-symcard, .st-write[data-paper=dark] .st-place.is-filled { background: var(--c-paper-black); color: var(--c-paper-black-ink); border-color: var(--c-paper-black-line); }
+.st-write[data-paper=dark] .st-ink { stroke: var(--c-paper-black-ink); }
+@media (orientation: portrait) {
+  .st-symbody { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "item" "stage" "places"; }
+  .st-symitem { flex-direction: row; justify-content: center; gap: var(--s-4); }
+  .st-symcard { width: 200px; height: 150px; aspect-ratio: auto; }
+  .st-symitem .st-hint { max-width: 300px; text-align: left; }
+}
