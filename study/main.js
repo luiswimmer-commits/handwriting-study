@@ -165,7 +165,7 @@ function items() {
   const kind = GROUPS[study.link.group].kind;
   let { item, at } = itemAt(s.done);
   const shown = present({
-    count: T.counter(s.done + 1, total()), item: { kind, label: item.label, lang }, hint: s.done === 0,
+    count: T.counter(s.done + 1, total()), item: { kind, label: item.label, show: item.show, lang }, hint: s.done === 0,
     message: study.outbox.status === 'offline' ? T.offline : '',
     onNext: () => {
       const ink = study.pad.writing();

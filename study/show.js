@@ -3,7 +3,8 @@
 // formula hitting a new line for being long, dont ever do that") and never scrolled; if it is too wide at MATH_PX its letters are made smaller, exactly as
 // much as needed, down to MIN_PX ("just decrease a bit letter font if needed"). A formula that still does not fit is not shown (showItem answers ok: false,
 // and the page takes the set's next spare). A sentence is plain printed text at TEXT_PX, wrapping like any sentence.
-//   showItem(host, item, macros) -> { ok, px }      px: the size the item was shown at (stored with the row)
+//   showItem(host, item, macros) -> { ok, px }      px: the size the item was shown at (stored with the row); item.show, when the set has it, is the
+//                                                   label as the app draws it on the screen (T-123: a matrix of fractions has its rows apart)
 //   oneLine(el)                                       true when a rendered formula sits on one line (a matrix's rows are its shape, not lines)
 export const MATH_PX = 28;      // the body size of a formula (KaTeX draws it KATEX_SCALE times this, as the text box does: textbox.css .tb-math .katex)
 export const MIN_PX = 22;       // never smaller than this
@@ -42,7 +43,7 @@ export function showItem(host, item, macros = {}) {
   const el = document.createElement('div');
   el.className = 'st-math';
   host.appendChild(el);
-  renderMath(el, item.label, macros);
+  renderMath(el, item.show ?? item.label, macros);
   if (el.querySelector('.katex-error')) { host.textContent = ''; return { ok: false, px: 0 }; }
   const room = innerWidth(host);
   let px = MATH_PX;

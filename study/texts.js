@@ -1,7 +1,7 @@
 // The study page's words (T-112): English for the groups math, en, ko, ja and zh, Portuguese (read in Brazil and in Portugal) for pt. Few, plain and short: the
 // writers are strangers, some reading their second language. The agreement itself is docs/release/study-agreement.<lang>.md (shown as it is).
 export const AGREEMENT_VERSION = '0.2';   // the version line of docs/release/study-agreement.en.md and .pt.md (tests/study/study.test.js checks it)
-export const STUDY_VERSION = 'study-0.2'; // sent as the payload's `app`: which page made the row, and so which generation of the sets it showed (0.2: C99/C100)
+export const STUDY_VERSION = 'study-0.3'; // sent as the payload's `app`: which page made the row, and so which generation of the sets it showed (0.2: C99/C100; 0.3: the math sets with matrices, T-123)
 
 const EN = {
   title: 'Handwriting study',
