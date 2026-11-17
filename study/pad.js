@@ -11,6 +11,12 @@ import { drawStrokes, WetStroke } from '../src/ink/render.js';
 
 // The pen of the app's training places (src/shell/settings.js TRAINING_PEN: the palette's first slot and the default width; tests/study checks they agree)
 export const PEN = Object.freeze({ slot: '--c-ink-black', width: 2.6 });
+// The two pages a writer can choose (the owner, 2026-11-16: "let labelers change dark and light on top, but make sure the color of pen stays black for
+// light or white for dark"): each has its paper, its ruling and its ink, all tokens of the app's papers. Ink is stored without a colour either way.
+export const PAPERS = Object.freeze({
+  light: Object.freeze({ paper: '--c-paper', line: '--c-paper-line', ink: PEN.slot }),
+  dark: Object.freeze({ paper: '--c-paper-black', line: '--c-paper-black-line', ink: '--c-paper-black-ink' }),
+});
 export const MIN_SCREEN_DISTANCE = 1;   // CSS px between kept points, as the notebook's ink keeps them (src/ink/ink.js); first and last always kept
 const MOVED = 12;                       // CSS px a finger or a mouse must move before it counts as an attempt to write
 const PALM_MS = 1000;                   // a touch this soon after the pen was seen is the hand, not an attempt
@@ -24,7 +30,8 @@ export class Pad {
     host.innerHTML = '<canvas class="st-canvas"></canvas>';
     this.canvas = host.firstElementChild;
     this.ctx = this.canvas.getContext('2d');
-    this.style = { color: token(PEN.slot), width: PEN.width };
+    this.paper = 'light';
+    this.style = { color: token(PAPERS.light.ink), width: PEN.width };
     this.strokes = [];
     this.size = [1, 1];
     this.ruling = 0;
@@ -52,6 +59,13 @@ export class Pad {
     this.size = [Math.max(100, Math.round(r.width)), Math.max(100, Math.round(r.height))];
     this.ruling = ruling;
     this.clear();
+  }
+
+  /** The page's look: 'light' (white paper, black ink) or 'dark' (dark paper, white ink). What is written stays and is redrawn. */
+  setPaper(mode) {
+    this.paper = PAPERS[mode] ? mode : 'light';
+    this.style.color = token(PAPERS[this.paper].ink);
+    this._draw();
   }
 
   get hasInk() { return this.strokes.length > 0; }
@@ -99,10 +113,14 @@ export class Pad {
   _draw() {
     const ctx = this.ctx;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // The paper is painted INTO the canvas, not left to the element behind it: a browser that darkens pages by itself recolours an element's
+    // background but not a canvas, which left black ink on a dark page on the owner's tablet (2026-11-16). Paper, ruling and ink change together.
+    const look = PAPERS[this.paper];
+    ctx.fillStyle = token(look.paper);
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this._setTransform();
     if (this.ruling > 0) {   // faint lines across the page, the first a spacing down from the top
-      ctx.strokeStyle = token('--c-paper-line');
+      ctx.strokeStyle = token(look.line);
       ctx.lineWidth = 1 / this._scale;
       ctx.beginPath();
       for (let y = this.ruling; y < this.size[1]; y += this.ruling) { ctx.moveTo(0, y); ctx.lineTo(this.size[0], y); }

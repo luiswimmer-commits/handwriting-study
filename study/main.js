@@ -15,7 +15,9 @@ const T = textsFor(lang);
 document.documentElement.lang = lang === 'pt' ? 'pt' : 'en';
 document.title = T.title;
 
-const study = { link: null, config: null, set: null, setAt: 0, state: null, outbox: null, pad: null, write: null };
+const study = { link: null, config: null, set: null, setAt: 0, state: null, outbox: null, pad: null, write: null, paper: null };
+// the page starts as the device is set (dark or light) and the writer can change it on top; kept for this visit only, nothing is stored
+study.paper = globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 globalThis.__study = study;   // for the browser suite (tests/study/study.e2e.cjs): read only
 
 // ---------------------------------------------------------------- simple screens
@@ -47,12 +49,21 @@ function writing() {
   if (study.write) return study.write;
   app.innerHTML = `<div class="st-write" data-st="write">
     <div class="st-bar"><span class="st-count" data-st="count"></span><span class="st-msg" data-st="msg" role="status" aria-live="polite"></span>
+      <button type="button" class="st-btn is-quiet" data-act="paper"></button>
       <button type="button" class="st-btn" data-act="clear">${esc(T.clear)}</button>
       <button type="button" class="st-btn is-primary" data-act="next">${esc(T.next)}</button></div>
     <div class="st-body"><section class="st-item" data-st="item" aria-live="polite"></section><div data-st="stage"></div></div></div>`;
   const $ = (s) => app.querySelector(s);
   const w = { $, item: null, onNext: null, onRefused: null, msg: (text, warn = true) => { const m = $('[data-st=msg]'); m.textContent = text ?? ''; m.classList.toggle('is-quiet', !warn); } };
   study.pad = new Pad({ host: $('[data-st=stage]'), onChange: () => sync(), onRefused: (type) => w.onRefused?.(type) });
+  const paper = (mode) => {   // the button names the page it changes TO
+    study.paper = mode;
+    $('[data-st=write]').dataset.paper = mode;
+    $('[data-act=paper]').textContent = mode === 'dark' ? T.paperLight : T.paperDark;
+    study.pad.setPaper(mode);
+  };
+  $('[data-act=paper]').onclick = () => paper(study.paper === 'dark' ? 'light' : 'dark');
+  paper(study.paper);
   $('[data-act=clear]').onclick = () => { study.pad.clear(); };
   $('[data-act=next]').onclick = () => { if (study.pad.hasInk) w.onNext?.(); };
   study.write = w;

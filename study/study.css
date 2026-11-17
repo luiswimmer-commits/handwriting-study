@@ -70,6 +70,12 @@ a.st-btn { text-decoration: none; }
 }
 .st-item .st-hint { margin: var(--s-2) 0 0; font-size: 16px; color: var(--c-on-paper-muted); }
 .st-stage { flex: 1; position: relative; min-width: 0; min-height: 0; background: var(--c-paper); }
+/* the dark page (the writer's choice on top): dark paper, the item in light letters; the ink is white there (study/pad.js PAPERS) */
+.st-write[data-paper=dark] .st-stage { background: var(--c-paper-black); }
+.st-write[data-paper=dark] .st-item { background: var(--c-paper-charcoal); color: var(--c-paper-black-ink); border-bottom-color: var(--c-paper-charcoal-line); }
+.st-write[data-paper=dark] .st-item .st-hint { color: var(--c-text-muted); }
+.st-write[data-paper=dark] .st-math, .st-write[data-paper=dark] .st-sentence { color: var(--c-paper-black-ink); }
+.st-btn.is-quiet { min-width: 0; background: transparent; color: var(--c-text-muted); }
 .st-canvas { position: absolute; inset: 0; display: block; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 
 /* the item itself: a formula on one line, 28 px (22 px at the least, study/show.js); a sentence at 28 px */
